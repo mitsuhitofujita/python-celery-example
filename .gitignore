@@ -1,0 +1,5 @@
+.env
+__pycache__
+.venv
+docker/celery/.vscode-server/*
+!docker/celery/.vscode-server/.gitkeep

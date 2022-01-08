@@ -1,0 +1,39 @@
+version: '3'
+services:
+  cdk:
+    build:
+      # args:
+      #   - APP_UID=${CDK_UID}
+      #   - APP_GID=${CDK_GID}
+      #   - APP_USER=${CDK_USER}
+      #   - APP_GROUP=${CDK_GROUP}
+      #   - APP_HOME=${HOME}
+      #   - DOCKER_GID=${DOCKER_GID}
+      #   - DOCKER_GROUP=${DOCKER_GROUP}
+      context: docker/cdk
+    container_name: cdk
+    network_mode: host
+    tty: true
+    user: ${CDK_UID}:${DOCKER_GID}
+    volumes:
+      - ${HOME}/.aws:${HOME}/.aws
+      - ${PWD}:${PWD}
+      - /var/run/docker.sock:/var/run/docker.sock
+    working_dir: ${PWD}/cdk
+  celery:
+    build:
+      # args:
+      #   - APP_UID=${CELERY_UID}
+      #   - APP_GID=${CELERY_GID}
+      #   - APP_USER=${CELERY_USER}
+      #   - APP_HOME=${CELERY_HOME}
+      #   - APP_GROUP=${CELERY_GROUP}
+      #   - APP_DIR=${CELERY_DIR}
+      context: docker/celery
+    container_name: celery
+    tty: true
+    user: ${CELERY_UID}:${CELERY_GID}
+    volumes:
+      - ./docker/celery/.vscode-server:${CELERY_HOME}/.vscode-server
+      - ./app:${CELERY_DIR}
+    working_dir: ${CELERY_DIR}
